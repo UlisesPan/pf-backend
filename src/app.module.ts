@@ -10,13 +10,16 @@ import { CourseModulesModule } from './course-modules/course-modules.module';
 import { LessonsModule } from './lessons/lessons.module';
 import { LessonProgressModule } from './lesson-progress/lesson-progress.module';
 import { CourseEnrollmentsModule } from './course-enrollments/course-enrollments.module';
-import { AuthModu
+import { AuthModule } from './auth/auth.module';
+import { SubscriptionsModule } from './subscriptions/subscriptions.module';
+
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
+      imports: [ConfigModule, SubscriptionsModule,
+      ],
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
         type: 'postgres',
@@ -37,8 +40,9 @@ import { AuthModu
     CourseEnrollmentsModule,
     LessonProgressModule,
     AuthModule,
+    SubscriptionsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-  export class AppModule { }
+export class AppModule { }
