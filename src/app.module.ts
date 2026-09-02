@@ -10,6 +10,7 @@ import { CourseModulesModule } from './course-modules/course-modules.module';
 import { LessonsModule } from './lessons/lessons.module';
 import { LessonProgressModule } from './lesson-progress/lesson-progress.module';
 import { CourseEnrollmentsModule } from './course-enrollments/course-enrollments.module';
+import { AuthModu
 
 @Module({
   imports: [
@@ -35,8 +36,9 @@ import { CourseEnrollmentsModule } from './course-enrollments/course-enrollments
     LessonsModule,
     CourseEnrollmentsModule,
     LessonProgressModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+  export class AppModule { }
