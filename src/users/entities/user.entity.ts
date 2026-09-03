@@ -34,9 +34,12 @@ export class User {
     @Column({ unique: true })
     email: string;
 
-    @Column()
+    @Column({ type: 'varchar', nullable: true })
     @Exclude() // evita que el password se serialice en las respuestas
-    passwordHash: string;
+    passwordHash: string | null;
+
+    @Column({ type: 'varchar', unique: true, nullable: true })
+    googleId: string | null;
 
     @Column({ type: 'enum', enum: UserRole, default: UserRole.STUDENT })
     role: UserRole;
