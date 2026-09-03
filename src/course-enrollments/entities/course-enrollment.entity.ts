@@ -1,29 +1,44 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, CreateDateColumn, Unique } from 'typeorm';
+import {
+    Entity,
+    PrimaryGeneratedColumn,
+    Column,
+    ManyToOne,
+    JoinColumn,
+    CreateDateColumn,
+    Unique,
+} from 'typeorm';
 import { User } from '../../users/entities/user.entity';
 import { Course } from '../../courses/entities/course.entity';
-import { LessonProgress } from '../../lesson-progress/entities/lesson-progress.entity';
+
+export enum EnrollmentStatus {
+    ACTIVE = 'active',
+    COMPLETED = 'completed',
+    CANCELLED = 'cancelled',
+}
 
 @Entity('course_enrollments')
-@Unique(['student', 'course'])
+@Unique(['user', 'course']) // evita que el mismo usuario se inscriba dos veces al mismo curso
 export class CourseEnrollment {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
     @ManyToOne(() => User, (user) => user.enrollments, { onDelete: 'CASCADE' })
-    student: User;
+    @JoinColumn({ name: 'userId' })
+    user: User;
+
+    @Column()
+    userId: string;
 
     @ManyToOne(() => Course, (course) => course.enrollments, { onDelete: 'CASCADE' })
+    @JoinColumn({ name: 'courseId' })
     course: Course;
 
-    @Column({ name: 'progress_percent', default: 0 })
-    progressPercent: number;
+    @Column()
+    courseId: string;
 
-    @Column({ name: 'completed_at', type: 'timestamp', nullable: true })
-    completedAt: Date;
+    @Column({ type: 'enum', enum: EnrollmentStatus, default: EnrollmentStatus.ACTIVE })
+    status: EnrollmentStatus;
 
-    @OneToMany(() => LessonProgress, (progress) => progress.enrollment)
-    lessonProgress: LessonProgress[];
-
-    @CreateDateColumn({ name: 'enrolled_at' })
+    @CreateDateColumn()
     enrolledAt: Date;
 }
