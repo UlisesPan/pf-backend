@@ -5,7 +5,7 @@ import { UpdateCourseModuleDto } from './dto/update-course-module.dto';
 
 @Controller('course-modules')
 export class CourseModulesController {
-  constructor(private readonly courseModulesService: CourseModulesService) {}
+  constructor(private readonly courseModulesService: CourseModulesService) { }
 
   @Post()
   create(@Body() createCourseModuleDto: CreateCourseModuleDto) {
@@ -19,16 +19,16 @@ export class CourseModulesController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.courseModulesService.findOne(+id);
+    return this.courseModulesService.findOne(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateCourseModuleDto: UpdateCourseModuleDto) {
-    return this.courseModulesService.update(+id, updateCourseModuleDto);
+    return this.courseModulesService.update(id, updateCourseModuleDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.courseModulesService.remove(+id);
+    return this.courseModulesService.remove(id);
   }
 }

@@ -59,7 +59,7 @@ export class User {
     @Column({ nullable: true, length: 100 })
     country: string;
 
-    @OneToMany(() => CourseEnrollment, (enrollment) => enrollment.user)
+    @OneToMany(() => CourseEnrollment, (enrollment) => enrollment.student)
     enrollments: CourseEnrollment[];
 
     @OneToMany(() => Course, (course) => course.instructor)

@@ -8,7 +8,7 @@ export class LessonProgress {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @ManyToOne(() => CourseEnrollment, (enrollment) => enrollment.course, { onDelete: 'CASCADE' })
+    @ManyToOne(() => CourseEnrollment, (enrollment) => enrollment.lessonProgress, { onDelete: 'CASCADE' })
     enrollment: CourseEnrollment;
 
     @ManyToOne(() => Lesson, (lesson) => lesson.progressRecords, { onDelete: 'CASCADE' })
@@ -18,5 +18,5 @@ export class LessonProgress {
     completed: boolean;
 
     @Column({ name: 'completed_at', type: 'timestamp', nullable: true })
-    completedAt: Date;
+    completedAt: Date | null;
 }

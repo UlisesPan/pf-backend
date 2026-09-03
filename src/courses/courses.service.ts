@@ -1,26 +1,95 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Course } from './entities/course.entity';
+import { Category } from '../categories/entities/category.entity';
+import { User } from '../users/entities/user.entity';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
 
 @Injectable()
 export class CoursesService {
-  create(createCourseDto: CreateCourseDto) {
-    return 'This action adds a new course';
+  constructor(
+    @InjectRepository(Course)
+    private readonly coursesRepository: Repository<Course>,
+    @InjectRepository(Category)
+    private readonly categoriesRepository: Repository<Category>,
+    @InjectRepository(User)
+    private readonly usersRepository: Repository<User>,
+  ) { }
+
+  async create(dto: CreateCourseDto, instructorId: string): Promise<Course> {
+    const category = await this.categoriesRepository.findOne({
+      where: { id: dto.categoryId },
+    });
+    if (!category) {
+      throw new NotFoundException(`Categoría con id ${dto.categoryId} no encontrada`);
+    }
+
+    const instructor = await this.usersRepository.findOne({
+      where: { id: instructorId },
+    });
+    if (!instructor) {
+      throw new NotFoundException(`Instructor con id ${instructorId} no encontrado`);
+    }
+
+    const course = this.coursesRepository.create({
+      title: dto.title,
+      description: dto.description,
+      difficulty: dto.difficulty,
+      imageUrl: dto.imageUrl,
+      category,
+      instructor,
+    });
+
+    return this.coursesRepository.save(course);
   }
 
-  findAll() {
-    return `This action returns all courses`;
+  async findAll(): Promise<Course[]> {
+    return this.coursesRepository.find({
+      relations: { category: true, instructor: true },
+      order: { createdAt: 'DESC' },
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} course`;
+  async findOne(id: string): Promise<Course> {
+    const course = await this.coursesRepository.findOne({
+      where: { id },
+      relations: { category: true, instructor: true, modules: true },
+    });
+
+    if (!course) {
+      throw new NotFoundException(`Curso con id ${id} no encontrado`);
+    }
+
+    return course;
   }
 
-  update(id: number, updateCourseDto: UpdateCourseDto) {
-    return `This action updates a #${id} course`;
+  async update(id: string, dto: UpdateCourseDto): Promise<Course> {
+    const course = await this.findOne(id);
+
+    if (dto.categoryId) {
+      const category = await this.categoriesRepository.findOne({
+        where: { id: dto.categoryId },
+      });
+      if (!category) {
+        throw new NotFoundException(`Categoría con id ${dto.categoryId} no encontrada`);
+      }
+      course.category = category;
+    }
+
+    Object.assign(course, {
+      title: dto.title ?? course.title,
+      description: dto.description ?? course.description,
+      difficulty: dto.difficulty ?? course.difficulty,
+      imageUrl: dto.imageUrl ?? course.imageUrl,
+    });
+
+    return this.coursesRepository.save(course);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} course`;
+  async remove(id: string): Promise<void> {
+    const course = await this.findOne(id);
+    await this.coursesRepository.remove(course);
   }
 }

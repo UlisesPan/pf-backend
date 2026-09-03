@@ -1,4 +1,13 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateLessonProgressDto } from './create-lesson-progress.dto';
+import { ApiPropertyOptional } from '@nestjs/swagger';
+import { IsOptional, IsBoolean } from 'class-validator';
 
-export class UpdateLessonProgressDto extends PartialType(CreateLessonProgressDto) {}
+// No se permite reasignar enrollment ni lesson vía update
+export class UpdateLessonProgressDto {
+    @ApiPropertyOptional({
+        example: true,
+        description: 'Marca la lección como completada o no',
+    })
+    @IsOptional()
+    @IsBoolean()
+    completed?: boolean;
+}

@@ -1,9 +1,17 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsUUID, IsNotEmpty, IsOptional, IsBoolean, IsNumber, Min, Max } from 'class-validator';
+import { IsUUID, IsNotEmpty, IsOptional, IsBoolean } from 'class-validator';
 
 export class CreateLessonProgressDto {
     @ApiProperty({
         example: 'b3f1c2a0-1234-4a5b-9abc-1234567890ab',
+        description: 'ID de la inscripción (CourseEnrollment) del usuario al curso',
+    })
+    @IsUUID()
+    @IsNotEmpty()
+    enrollmentId: string;
+
+    @ApiProperty({
+        example: 'c4a2d3b1-5678-4c6d-8bcd-234567890abc',
         description: 'ID de la lección sobre la que se registra el progreso',
     })
     @IsUUID()
@@ -18,14 +26,4 @@ export class CreateLessonProgressDto {
     @IsOptional()
     @IsBoolean()
     completed?: boolean;
-
-    @ApiPropertyOptional({
-        example: 75,
-        description: 'Porcentaje de avance dentro de la lección (0-100)',
-    })
-    @IsOptional()
-    @IsNumber()
-    @Min(0)
-    @Max(100)
-    progressPercentage?: number;
 }
