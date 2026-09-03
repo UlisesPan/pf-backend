@@ -4,7 +4,7 @@ import { ApiProperty } from '@nestjs/swagger';
 export class LoginDto {
     @ApiProperty({
         description: 'Correo electrónico del usuario registrado',
-        example: 'admin@empresa.com',
+        example: 'maria.gonzalez@empresa.com',
         format: 'email',
         maxLength: 255,
     })
@@ -13,7 +13,7 @@ export class LoginDto {
 
     @ApiProperty({
         description: 'Contraseña del usuario (mínimo 6 caracteres)',
-        example: 'SecurePass123!',
+        example: 'SecurePass123',
         format: 'password',
         writeOnly: true,
         minLength: 6,

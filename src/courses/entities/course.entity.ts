@@ -24,6 +24,9 @@ export class Course {
     @Column({ type: 'enum', enum: CourseDifficulty, default: CourseDifficulty.BEGINNER })
     difficulty: CourseDifficulty;
 
+    @Column({ name: 'image_url', nullable: true })
+    imageUrl: string;
+
     @ManyToOne(() => User, (user) => user.coursesCreated, { onDelete: 'CASCADE' })
     instructor: User;
 

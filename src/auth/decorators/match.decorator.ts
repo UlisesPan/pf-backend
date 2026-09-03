@@ -4,10 +4,7 @@ import {
     ValidationArguments,
 } from 'class-validator';
 
-/**
- * Valida que el valor de esta propiedad coincida con otra propiedad del mismo objeto.
- * Uso: @Match('password', { message: 'Las contraseñas no coinciden' })
- */
+
 export function Match(property: string, validationOptions?: ValidationOptions) {
     return function (object: Object, propertyName: string) {
         registerDecorator({
